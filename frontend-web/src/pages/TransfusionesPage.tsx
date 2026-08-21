@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Search, HeartPulse, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export default function TransfusionesPage() {
@@ -29,7 +29,7 @@ export default function TransfusionesPage() {
             <div className="bg-blue-50 p-4 rounded-lg flex items-center justify-between border border-blue-100">
               <div>
                 <p className="text-sm text-blue-600 font-medium">Receptor Seleccionado:</p>
-                <p className="text-lg font-bold text-slate-800">Jorge Ramírez</p>
+                <p className="text-lg font-bold text-slate-800">Jorge RamÃ­rez</p>
               </div>
               <div className="bg-blue-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-xl font-black shadow-md border-4 border-white">
                 A+
@@ -46,7 +46,7 @@ export default function TransfusionesPage() {
           </div>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-slate-600">Escanear Código ISBT-128</label>
+              <label className="text-sm font-medium text-slate-600">Escanear CÃ³digo ISBT-128</label>
               <div className="flex gap-2 mt-1">
                 <input type="text" className="flex-1 border border-slate-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-mono" placeholder="=W1234..." defaultValue="=W1234 26 55891 00" />
                 <button className="bg-slate-100 p-2 rounded-lg hover:bg-slate-200 text-slate-600"><Search className="w-5 h-5" /></button>
@@ -78,9 +78,9 @@ export default function TransfusionesPage() {
           <div className="bg-red-100 border-2 border-red-500 text-red-700 w-full p-6 rounded-xl flex items-center gap-4 shadow-sm animate-pulse">
             <AlertTriangle className="w-12 h-12 text-red-600 shrink-0" />
             <div>
-              <h4 className="text-xl font-black uppercase tracking-wide">¡ALERTA CRÍTICA DE INCOMPATIBILIDAD!</h4>
-              <p className="font-medium mt-1">Un paciente A+ no puede recibir sangre B+. Esto causaría una reacción hemolítica fatal.</p>
-              <p className="text-sm font-bold mt-2 bg-red-200 inline-block px-3 py-1 rounded text-red-800">TRANSFUSIÓN BLOQUEADA POR EL SISTEMA</p>
+              <h4 className="text-xl font-black uppercase tracking-wide">Â¡ALERTA CRÃTICA DE INCOMPATIBILIDAD!</h4>
+              <p className="font-medium mt-1">Un paciente A+ no puede recibir sangre B+. Esto causarÃ­a una reacciÃ³n hemolÃ­tica fatal.</p>
+              <p className="text-sm font-bold mt-2 bg-red-200 inline-block px-3 py-1 rounded text-red-800">TRANSFUSIÃ“N BLOQUEADA POR EL SISTEMA</p>
             </div>
           </div>
         )}

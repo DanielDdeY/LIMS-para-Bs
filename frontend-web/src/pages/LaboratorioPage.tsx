@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { AlertCircle, CheckCircle2, TestTube2 } from 'lucide-react';
 
 export default function LaboratorioPage() {
@@ -6,12 +6,12 @@ export default function LaboratorioPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Serología y Laboratorio</h2>
+          <h2 className="text-2xl font-bold text-slate-800">SerologÃ­a y Laboratorio</h2>
           <p className="text-slate-500">Analiza bolsas en cuarentena y registra resultados.</p>
         </div>
         <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-lg font-medium flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
-          3 Bolsas pendientes de análisis
+          3 Bolsas pendientes de anÃ¡lisis
         </div>
       </div>
 
@@ -19,12 +19,12 @@ export default function LaboratorioPage() {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-900 text-white text-sm">
-              <th className="p-4 font-medium">ISBT-128 (Código de Bolsa)</th>
+              <th className="p-4 font-medium">ISBT-128 (CÃ³digo de Bolsa)</th>
               <th className="p-4 font-medium">Grupo</th>
               <th className="p-4 font-medium text-center">VIH</th>
               <th className="p-4 font-medium text-center">Hepatitis B</th>
-              <th className="p-4 font-medium text-center">Sífilis</th>
-              <th className="p-4 font-medium text-center">Acción</th>
+              <th className="p-4 font-medium text-center">SÃ­filis</th>
+              <th className="p-4 font-medium text-center">AcciÃ³n</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 text-slate-700">
