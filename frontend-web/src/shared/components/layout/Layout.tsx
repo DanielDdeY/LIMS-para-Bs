@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+ï»¿import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Activity, Users, Droplet, FlaskConical, LayoutDashboard } from 'lucide-react';
 
 export function Layout() {
@@ -21,7 +21,7 @@ export function Layout() {
         <nav className="mt-6 flex flex-col gap-2 px-4">
           {menu.map(item => (
             <Link key={item.path} to={item.path}
-              className={{$`{location.pathname === item.path ? 'bg-blue-600' : 'hover:bg-slate-800'} flex items-center gap-3 px-4 py-3 rounded-lg transition-colors}}>
+              className={`${location.pathname === item.path ? 'bg-blue-600' : 'hover:bg-slate-800'} flex items-center gap-3 px-4 py-3 rounded-lg transition-colors`}>
               {item.icon}
               {item.name}
             </Link>
@@ -30,7 +30,7 @@ export function Layout() {
       </aside>
       <main className="flex-1 flex flex-col overflow-hidden">
         <header className="h-16 bg-white border-b flex items-center px-8 shadow-sm">
-          <h1 className="text-xl font-semibold text-slate-800">Portal Médico</h1>
+          <h1 className="text-xl font-semibold text-slate-800">Portal Medico</h1>
         </header>
         <div className="flex-1 overflow-auto p-8">
           <Outlet />
