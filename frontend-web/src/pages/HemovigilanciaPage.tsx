@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShieldAlert, Skull, AlertOctagon, RefreshCw, AlertTriangle, ArrowRight } from 'lucide-react';
 import { api } from '../services/api';
+import { toast } from 'sonner';
 
 export default function HemovigilanciaPage() {
   const [transfusiones, setTransfusiones] = useState<any[]>([]);
@@ -15,6 +16,7 @@ export default function HemovigilanciaPage() {
       setTransfusiones(response.data);
     } catch (error) {
       console.error('Error', error);
+      toast.error('Error cargando historial de transfusiones.');
     }
   };
 
@@ -23,9 +25,9 @@ export default function HemovigilanciaPage() {
     
     try {
       await api.post(`/hemovigilancia/lookback/${hemocomponenteId}`);
-      alert("ALERTA DE RED: Lookback disparado exitosamente. Se ha puesto en cuarentena todo componente del donante originario de esta bolsa para reevaluación.");
+      toast.success("ALERTA DE RED: Lookback disparado exitosamente. Se ha puesto en cuarentena todo componente del donante originario de esta bolsa para reevaluación.");
     } catch (error) {
-      alert("Error disparando Lookback. (Puede que no haya componentes extra del donante en inventario en este momento)");
+      toast.error("Error disparando Lookback. (Puede que no haya componentes extra del donante en inventario en este momento)");
     }
   };
 

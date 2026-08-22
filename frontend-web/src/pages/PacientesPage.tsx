@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, UserPlus, FileText, Phone, Calendar, Stethoscope, HeartPulse, Activity } from 'lucide-react';
 import { api } from '../services/api';
+import { toast } from 'sonner';
 
 export default function PacientesPage() {
   const [showForm, setShowForm] = useState(false);
@@ -22,6 +23,7 @@ export default function PacientesPage() {
       setPacientes(response.data);
     } catch (error) {
       console.error('Error cargando pacientes', error);
+      toast.error('No se pudo cargar la lista de pacientes.');
     }
   };
 
@@ -31,21 +33,18 @@ export default function PacientesPage() {
 
   const handleGuardar = async () => {
     try {
-      // Limpiar campos vacíos para que no rompan el parser de Java (Double, LocalDate)
       const payload: any = { ...formData };
       Object.keys(payload).forEach(key => {
-        if (payload[key] === '') {
-          payload[key] = null;
-        }
+        if (payload[key] === '') payload[key] = null;
       });
       
       await api.post('/pacientes', payload);
-      alert("Paciente (Receptor) registrado exitosamente.");
+      toast.success("Paciente (Receptor) registrado exitosamente.");
       setShowForm(false);
       cargarPacientes();
     } catch (error) {
       console.error(error);
-      alert("Error al guardar el paciente. Revisa la consola o asegúrate de que el Backend esté corriendo.");
+      toast.error("Error al guardar el paciente. Asegúrate de que el Backend esté corriendo en el puerto 8080.");
     }
   };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, UserPlus, Dna, Phone, Calendar, ArrowRight, ShieldCheck, HeartPulse, Scale, Activity } from 'lucide-react';
 import { api } from '../services/api';
+import { toast } from 'sonner';
 
 export default function DonantesPage() {
   const [showForm, setShowForm] = useState(false);
@@ -22,6 +23,7 @@ export default function DonantesPage() {
       setDonantes(response.data);
     } catch (error) {
       console.error('Error cargando donantes', error);
+      toast.error('No se pudo cargar la lista de donantes.');
     }
   };
 
@@ -31,21 +33,18 @@ export default function DonantesPage() {
 
   const handleGuardar = async () => {
     try {
-      // Limpiar campos vacíos para que no rompan el parser de Java
       const payload: any = { ...formData };
       Object.keys(payload).forEach(key => {
-        if (payload[key] === '') {
-          payload[key] = null;
-        }
+        if (payload[key] === '') payload[key] = null;
       });
 
       await api.post('/donantes', payload);
-      alert("Donante registrado exitosamente en el sistema. Generando ISBT-128...");
+      toast.success("Donante registrado exitosamente. Generando ISBT-128...");
       setShowForm(false);
       cargarDonantes(); 
     } catch (error) {
       console.error(error);
-      alert("Error al guardar el donante. Revisa la consola o asegúrate de que el Backend esté corriendo.");
+      toast.error("Error al guardar el donante. Asegúrate de que el Backend esté corriendo en el puerto 8080.");
     }
   };
 

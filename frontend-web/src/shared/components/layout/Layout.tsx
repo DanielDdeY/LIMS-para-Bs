@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Activity, Users, Droplet, FlaskConical, LayoutDashboard, Snowflake, ShieldAlert, Bell, Search, Settings, ChevronRight, UserCircle } from 'lucide-react';
+import { Toaster } from 'sonner';
 
 export function Layout() {
   const location = useLocation();
@@ -16,7 +17,7 @@ export function Layout() {
 
   return (
     <div className="flex h-screen bg-[#F8FAFC] font-sans selection:bg-rose-100 selection:text-rose-900">
-      
+      <Toaster position="top-right" richColors />
       {/* SIDEBAR MODERNIZADO */}
       <aside className="w-72 bg-white border-r border-slate-200 flex flex-col justify-between shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 relative">
         <div>

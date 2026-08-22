@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AlertCircle, CheckCircle2, TestTube2, Microscope, XCircle, Clock } from 'lucide-react';
 import { api } from '../services/api';
+import { toast } from 'sonner';
 
 export default function LaboratorioPage() {
   const [pendientes, setPendientes] = useState<any[]>([]);
@@ -28,10 +29,10 @@ export default function LaboratorioPage() {
         sifilisPositivo: false,
         chagasPositivo: esInfectado // Simplificado para demo
       });
-      alert(`Análisis guardado. Bolsa marcada como ${esInfectado ? 'DESCARTADA' : 'LIBERADA'}`);
+      toast.success(`Análisis guardado. Bolsa marcada como ${esInfectado ? 'DESCARTADA' : 'LIBERADA'}`);
       cargarPendientes();
     } catch (error) {
-      alert('Error guardando resultado');
+      toast.error('Error guardando resultado en la BD');
     }
   };
 

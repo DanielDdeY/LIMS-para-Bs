@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, HeartPulse, AlertTriangle, ShieldCheck, UserCheck, MapPin, Activity, Droplet } from 'lucide-react';
 import { api } from '../services/api';
+import { toast } from 'sonner';
 
 export default function TransfusionesPage() {
   const [pacientes, setPacientes] = useState<any[]>([]);
@@ -32,18 +33,20 @@ export default function TransfusionesPage() {
       setTransfusiones(transRes.data);
     } catch (error) {
       console.error("Error cargando transfusiones:", error);
+      toast.error('Error cargando los datos clínicos de la BD.');
     }
   };
 
   const simularCrossmatch = () => {
     if (!form.pacienteId || !form.hemocomponenteId) {
-      alert("Seleccione paciente y hemocomponente");
+      toast.warning("Seleccione paciente y hemocomponente");
       return;
     }
     setMatchStatus('checking');
     setTimeout(() => {
       // Simulación de crossmatch exitoso para la demo
       setMatchStatus('compatible');
+      toast.success("¡Crossmatch compatible!");
     }, 1500);
   };
 
@@ -57,12 +60,12 @@ export default function TransfusionesPage() {
         areaDestino: form.areaDestino,
         signosVitalesPre: "PA: 120/80, FC: 75, Temp: 36.5"
       });
-      alert('Transfusión registrada exitosamente. Hemocomponente descontado de stock.');
+      toast.success('Transfusión registrada exitosamente. Hemocomponente descontado del stock.');
       setMatchStatus('pending');
       setForm({ pacienteId: '', hemocomponenteId: '', medicoResponsable: '', responsableAplicacion: '', areaDestino: 'UCI' });
       cargarDatos();
     } catch (error) {
-      alert('Error registrando transfusión');
+      toast.error('Error registrando transfusión en el backend.');
     }
   };
 

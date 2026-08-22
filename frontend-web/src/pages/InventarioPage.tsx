@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Snowflake, ThermometerSnowflake, AlertTriangle, Package, Truck } from 'lucide-react';
 import { api } from '../services/api';
+import { toast } from 'sonner';
 
 export default function InventarioPage() {
   const [hemocomponentes, setHemocomponentes] = useState<any[]>([]);
@@ -15,6 +16,7 @@ export default function InventarioPage() {
       setHemocomponentes(response.data);
     } catch (error) {
       console.error('Error cargando inventario', error);
+      toast.error('Error al cargar el inventario de la base de datos.');
     }
   };
 
@@ -29,10 +31,10 @@ export default function InventarioPage() {
         volumenMl: 450,
         ubicacionFisica: 'Refrigerador A - Estante 1'
       });
-      alert('Lote ingresado a cuarentena exitosamente');
+      toast.success('Lote ingresado a cuarentena exitosamente');
       cargarInventario();
     } catch (error) {
-      alert('Error al ingresar el lote');
+      toast.error('Error al ingresar el lote al sistema.');
     }
   };
 
