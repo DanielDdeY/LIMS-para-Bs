@@ -89,43 +89,50 @@ export default function PacientesPage() {
             <div className="grid grid-cols-4 gap-6">
               <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">1. Datos Personales</h4></div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">DNI / Carnet Ext.</label>
-                <input name="documento" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="N° Documento" />
+                <label className="text-sm font-semibold text-slate-700">DNI / Pasaporte</label>
+                <input name="documento" value={formData.documento} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Nro. Documento" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Nombres</label>
-                <input name="nombres" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Nombres" />
+                <input name="nombres" value={formData.nombres} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Nombres completos" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Apellidos</label>
-                <input name="apellidos" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Apellidos" />
+                <input name="apellidos" value={formData.apellidos} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Apellidos completos" />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Fecha Nacimiento</label>
-                <input name="fechaNacimiento" onChange={handleChange} type="date" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" />
+                <label className="text-sm font-semibold text-slate-700">Sexo Biológico</label>
+                <select name="sexo" value={formData.sexo} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                  <option>Masculino</option>
+                  <option>Femenino</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Fecha de Nacimiento</label>
+                <input name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange} type="date" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" />
               </div>
             </div>
 
             <div className="grid grid-cols-4 gap-6 border-t border-slate-100 pt-6">
-              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">2. Tipificación y Diagnóstico</h4></div>
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">2. Datos Médicos</h4></div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Historia Clínica N°</label>
-                <input name="historiaClinica" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. HC-900213" />
+                <label className="text-sm font-semibold text-slate-700">Historia Clínica (HC)</label>
+                <input name="historiaClinica" value={formData.historiaClinica} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Nro. HC" />
               </div>
-              <div className="space-y-2 col-span-3">
+              <div className="space-y-2 col-span-2">
                 <label className="text-sm font-semibold text-slate-700">Diagnóstico Principal</label>
-                <input name="diagnostico" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Anemia Severa, Hemorragia post-parto..." />
+                <input name="diagnostico" value={formData.diagnostico} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Anemia Severa, Hemorragia post-parto..." />
               </div>
               
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Sistema ABO</label>
-                <select name="grupoSanguineo" onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
+                <select name="grupoSanguineo" value={formData.grupoSanguineo} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
                   <option>O</option><option>A</option><option>B</option><option>AB</option>
                 </select>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Factor Rh</label>
-                <select name="factorRh" onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
+                <select name="factorRh" value={formData.factorRh} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
                   <option>POSITIVO</option><option>NEGATIVO</option>
                 </select>
               </div>
@@ -136,7 +143,7 @@ export default function PacientesPage() {
               
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Servicio de Atención</label>
-                <select name="servicioAtencion" onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
+                <select name="servicioAtencion" value={formData.servicioAtencion} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
                   <option>Emergencia</option>
                   <option>UCI</option>
                   <option>Cirugía</option>
@@ -147,9 +154,21 @@ export default function PacientesPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Área / Piso</label>
-                <input name="areaInternacion" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Pabellón B, Piso 3" />
-                <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-2">3. Historial Inmunohematológico y Urgencia</h4></div>
-              <div>
+                <input name="areaInternacion" value={formData.areaInternacion} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Pabellón B, Piso 3" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Número de Cama</label>
+                <input name="numeroCama" value={formData.numeroCama} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Cama 12" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Médico Tratante</label>
+                <input name="medicoTratante" value={formData.medicoTratante} onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Dr. ..." />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-6 border-t border-slate-100 pt-6">
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-2">4. Historial Inmunohematológico y Urgencia</h4></div>
+              <div className="col-span-2">
                 <label className="text-sm font-semibold text-slate-700">Anticuerpos Irregulares Previos</label>
                 <select name="anticuerposIrregulares" value={formData.anticuerposIrregulares} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 bg-slate-50">
                   <option>Desconocido</option>
@@ -157,11 +176,11 @@ export default function PacientesPage() {
                   <option>Positivo (Alerta Crítica)</option>
                 </select>
               </div>
-              <div>
+              <div className="col-span-2">
                 <label className="text-sm font-semibold text-slate-700">Número de Gestaciones (Mujeres)</label>
                 <input type="number" name="gestaciones" value={formData.gestaciones} onChange={handleChange} placeholder="0 si no aplica" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 bg-slate-50" />
               </div>
-              <div className="col-span-2">
+              <div className="col-span-4">
                 <label className="text-sm font-semibold text-slate-700">Nivel de Urgencia Transfusional</label>
                 <select name="nivelUrgencia" value={formData.nivelUrgencia} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-slate-50 font-bold">
                   <option>Rutina</option>
@@ -169,15 +188,6 @@ export default function PacientesPage() {
                   <option>Emergencia (Liberación inmediata sin crossmatch)</option>
                   <option>Protocolo Transfusión Masiva (Hemorragia Exanguinante)</option>
                 </select>
-              </div>
-            </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Número de Cama</label>
-                <input name="numeroCama" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Cama 12" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Médico Tratante</label>
-                <input name="medicoTratante" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Dr. ..." />
               </div>
             </div>
             
