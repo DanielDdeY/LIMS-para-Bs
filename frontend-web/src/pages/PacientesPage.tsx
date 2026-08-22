@@ -165,7 +165,7 @@ export default function PacientesPage() {
                 <label className="text-sm font-semibold text-slate-700">Nivel de Urgencia Transfusional</label>
                 <select name="nivelUrgencia" value={formData.nivelUrgencia} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-slate-50 font-bold">
                   <option>Rutina</option>
-                  <option>Urgencia (Requiere en < 2 horas)</option>
+                  <option>Urgencia (Requiere en &lt; 2 horas)</option>
                   <option>Emergencia (Liberación inmediata sin crossmatch)</option>
                   <option>Protocolo Transfusión Masiva (Hemorragia Exanguinante)</option>
                 </select>
