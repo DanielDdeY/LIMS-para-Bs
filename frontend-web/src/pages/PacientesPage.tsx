@@ -10,7 +10,8 @@ export default function PacientesPage() {
     documento: '', nombres: '', apellidos: '', sexo: 'Masculino',
     fechaNacimiento: '', grupoSanguineo: 'O', factorRh: 'POSITIVO',
     historiaClinica: '', diagnostico: '', servicioAtencion: 'Emergencia',
-    areaInternacion: '', numeroCama: '', medicoTratante: ''
+    areaInternacion: '', numeroCama: '', medicoTratante: '',
+    anticuerposIrregulares: 'Desconocido', gestaciones: '', nivelUrgencia: 'Rutina'
   });
 
   useEffect(() => {
@@ -147,7 +148,29 @@ export default function PacientesPage() {
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Área / Piso</label>
                 <input name="areaInternacion" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Pabellón B, Piso 3" />
+                <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-2">3. Historial Inmunohematológico y Urgencia</h4></div>
+              <div>
+                <label className="text-sm font-semibold text-slate-700">Anticuerpos Irregulares Previos</label>
+                <select name="anticuerposIrregulares" value={formData.anticuerposIrregulares} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                  <option>Desconocido</option>
+                  <option>Negativo</option>
+                  <option>Positivo (Alerta Crítica)</option>
+                </select>
               </div>
+              <div>
+                <label className="text-sm font-semibold text-slate-700">Número de Gestaciones (Mujeres)</label>
+                <input type="number" name="gestaciones" value={formData.gestaciones} onChange={handleChange} placeholder="0 si no aplica" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 bg-slate-50" />
+              </div>
+              <div className="col-span-2">
+                <label className="text-sm font-semibold text-slate-700">Nivel de Urgencia Transfusional</label>
+                <select name="nivelUrgencia" value={formData.nivelUrgencia} onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-red-500 bg-slate-50 font-bold">
+                  <option>Rutina</option>
+                  <option>Urgencia (Requiere en < 2 horas)</option>
+                  <option>Emergencia (Liberación inmediata sin crossmatch)</option>
+                  <option>Protocolo Transfusión Masiva (Hemorragia Exanguinante)</option>
+                </select>
+              </div>
+            </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Número de Cama</label>
                 <input name="numeroCama" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. Cama 12" />

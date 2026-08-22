@@ -20,7 +20,10 @@ public class Transfusion {
     private LocalDateTime fechaHoraInicio;
     private LocalDateTime fechaHoraFin;
     private String signosVitalesPre;
-    private String signosVitalesPost;
+    private String signosVitales15Min;
+    private String signosVitalesFin;
+    private String tecnicaCrossmatch;
+    private Integer volumenTransfundidoMl;
     private String medicoResponsable;
     private String responsableAplicacion;
     private String areaDestino;

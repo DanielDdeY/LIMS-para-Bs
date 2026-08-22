@@ -19,6 +19,15 @@ public class Donante {
     private String apellidos;
     private String sexo;
     private LocalDate fechaNacimiento;
+
+    // --- NUEVOS CAMPOS CLÍNICOS Y NORMATIVOS ---
+    private String tipoDonacion; // Sangre Total, Aféresis Plaquetas, Aféresis Plasma
+    private Integer volumenExtraidoMl;
+    private Boolean consentimientoFirmado;
+    private Boolean tatuajesRecientes;
+    private Boolean viajeZonaEndemica;
+    private Boolean usoAntibioticos;
+
     private String direccion;
     private String telefono;
     private String correoElectronico;

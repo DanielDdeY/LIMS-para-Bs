@@ -30,4 +30,13 @@ public class Paciente {
     private String numeroCama;
     private String medicoTratante;
     private LocalDateTime fechaRegistro;
+
+    // --- NUEVOS CAMPOS CLÍNICOS ---
+    private String anticuerposIrregulares; // Positivo/Negativo/Desconocido
+    private Integer gestaciones; // Relevante para mujeres (aloinmunización)
+    private String nivelUrgencia; // Rutina, Urgencia, Emergencia, Protocolo Masivo
+
+    public Long getId() {
+        return id;
+    }
 }

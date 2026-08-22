@@ -10,7 +10,10 @@ export default function DonantesPage() {
     identificacion: '', nombres: '', apellidos: '', sexo: 'Masculino',
     direccion: '', telefono: '', correoElectronico: '', grupoSanguineo: 'O',
     factorRh: 'POSITIVO', fechaNacimiento: '', ultimaDonacion: '', observacionesMedicas: '',
-    peso: '', talla: '', presionArterial: '', hemoglobina: '', hematocrito: ''
+    peso: '', talla: '', presionArterial: '', hemoglobina: '', hematocrito: '',
+    tipoDonacion: 'Sangre Total', volumenExtraidoMl: '', 
+    consentimientoFirmado: false, tatuajesRecientes: false, 
+    viajeZonaEndemica: false, usoAntibioticos: false
   });
 
   useEffect(() => {
@@ -28,7 +31,13 @@ export default function DonantesPage() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData({ ...formData, [name]: checked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleGuardar = async () => {
@@ -142,9 +151,56 @@ export default function DonantesPage() {
                   <option>POSITIVO</option><option>NEGATIVO</option>
                 </select>
               </div>
-              <div className="space-y-2 col-span-2">
-                <label className="text-sm font-semibold text-slate-700">Observaciones del Médico</label>
-                <input name="observacionesMedicas" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Apto, venas finas..." />
+                 <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-4">3. Evaluación Médica (PRONAHEBAS)</h4></div>
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Peso (kg) *</label>
+                <input type="number" name="peso" value={formData.peso} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none" required/>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Presión Arterial</label>
+                <input type="text" name="presionArterial" value={formData.presionArterial} onChange={handleChange} placeholder="Ej. 120/80" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Hemoglobina (g/dL) *</label>
+                <input type="number" step="0.1" name="hemoglobina" value={formData.hemoglobina} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none" required/>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Tipo de Donación</label>
+                <select name="tipoDonacion" value={formData.tipoDonacion} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                  <option>Sangre Total</option>
+                  <option>Aféresis Plaquetas</option>
+                  <option>Aféresis Plasma</option>
+                </select>
+              </div>
+
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-4">4. Cuestionario de Exclusión y Seguridad</h4></div>
+              <div className="col-span-4 grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="tatuajesRecientes" checked={formData.tatuajesRecientes} onChange={handleChange} className="w-5 h-5 rounded text-emerald-600" />
+                  <span className="text-sm font-medium text-slate-700">¿Tatuajes o piercings en los últimos 6 meses?</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="viajeZonaEndemica" checked={formData.viajeZonaEndemica} onChange={handleChange} className="w-5 h-5 rounded text-emerald-600" />
+                  <span className="text-sm font-medium text-slate-700">¿Viajes a zonas endémicas (malaria, dengue)?</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="usoAntibioticos" checked={formData.usoAntibioticos} onChange={handleChange} className="w-5 h-5 rounded text-emerald-600" />
+                  <span className="text-sm font-medium text-slate-700">¿Uso de antibióticos en los últimos 7 días?</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer bg-emerald-100 p-2 rounded-lg border border-emerald-300">
+                  <input type="checkbox" name="consentimientoFirmado" checked={formData.consentimientoFirmado} onChange={handleChange} className="w-5 h-5 rounded text-emerald-600" />
+                  <span className="text-sm font-bold text-emerald-800">Consentimiento Informado Firmado</span>
+                </label>
+              </div>
+
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider mt-4">5. Resultados de Extracción</h4></div>
+              <div>
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Volumen Extraído (ml)</label>
+                <input type="number" name="volumenExtraidoMl" value={formData.volumenExtraidoMl} onChange={handleChange} placeholder="Ej. 450" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+              </div>
+              <div className="col-span-3">
+                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Observaciones</label>
+                <input type="text" name="observacionesMedicas" value={formData.observacionesMedicas} onChange={handleChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
               </div>
             </div>
             
