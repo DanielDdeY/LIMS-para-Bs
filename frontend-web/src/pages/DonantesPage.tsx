@@ -1,22 +1,78 @@
-﻿import React, { useState } from 'react';
-import { Search, UserPlus, Dna } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Search, UserPlus, Dna, Phone, Calendar, ArrowRight, ShieldCheck, HeartPulse, Scale, Activity } from 'lucide-react';
+import { api } from '../services/api';
 
 export default function DonantesPage() {
   const [showForm, setShowForm] = useState(false);
+  const [donantes, setDonantes] = useState<any[]>([]);
+  const [formData, setFormData] = useState({
+    identificacion: '', nombres: '', apellidos: '', sexo: 'Masculino',
+    direccion: '', telefono: '', correoElectronico: '', grupoSanguineo: 'O',
+    factorRh: 'POSITIVO', fechaNacimiento: '', ultimaDonacion: '', observacionesMedicas: '',
+    peso: '', talla: '', presionArterial: '', hemoglobina: '', hematocrito: ''
+  });
+
+  useEffect(() => {
+    cargarDonantes();
+  }, []);
+
+  const cargarDonantes = async () => {
+    try {
+      const response = await api.get('/donantes');
+      setDonantes(response.data);
+    } catch (error) {
+      console.error('Error cargando donantes', error);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleGuardar = async () => {
+    try {
+      // Limpiar campos vacíos para que no rompan el parser de Java
+      const payload: any = { ...formData };
+      Object.keys(payload).forEach(key => {
+        if (payload[key] === '') {
+          payload[key] = null;
+        }
+      });
+
+      await api.post('/donantes', payload);
+      alert("Donante registrado exitosamente en el sistema. Generando ISBT-128...");
+      setShowForm(false);
+      cargarDonantes(); 
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar el donante. Revisa la consola o asegúrate de que el Backend esté corriendo.");
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight">GestiÃ³n de Donantes y FenotipificaciÃ³n</h2>
-          <p className="text-slate-500 mt-1">Registro avanzado con serologÃ­a extendida y fenotipos raros.</p>
+    <div className="space-y-8 animate-in">
+      <div className="flex justify-between items-end bg-white p-8 rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-slate-100 relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-64 h-64 bg-rose-50 rounded-full blur-3xl -z-10 opacity-60 translate-x-20 -translate-y-20"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-2">
+            <HeartPulse className="w-5 h-5 text-rose-500" />
+            <span className="text-rose-600 font-bold uppercase tracking-wider text-xs">Módulo ISBT-128 (Área Donación)</span>
+          </div>
+          <h2 className="text-4xl font-black text-slate-800 tracking-tight">Gestión de Donantes</h2>
+          <p className="text-slate-500 mt-2 text-lg">Triaje clínico, signos vitales e historial de extracción.</p>
         </div>
+        
         <button 
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-sm transition-all active:scale-95"
+          className={`
+            relative overflow-hidden px-6 py-3.5 rounded-2xl font-bold flex items-center gap-3 transition-all duration-300 active:scale-95 shadow-lg
+            ${showForm 
+              ? 'bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300 shadow-slate-200/50' 
+              : 'bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 text-white shadow-rose-500/30'}
+          `}
         >
           {showForm ? <Search className="w-5 h-5" /> : <UserPlus className="w-5 h-5" />}
-          {showForm ? 'Ver Historial General' : 'Registrar Nuevo Donante'}
+          {showForm ? 'Buscar en Historial' : 'Registrar Nuevo Donante'}
         </button>
       </div>
 
@@ -26,79 +82,79 @@ export default function DonantesPage() {
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
               <Dna className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-800">Formulario ClÃ­nico Avanzado</h3>
+            <h3 className="text-xl font-bold text-slate-800">Ficha Clínica de Evaluación</h3>
           </div>
           
-          <form className="space-y-8">
-            <div className="grid grid-cols-3 gap-6">
-              <div className="col-span-3"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">1. Datos DemogrÃ¡ficos</h4></div>
+          <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+            <div className="grid grid-cols-4 gap-6">
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">1. Datos Demográficos</h4></div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">DNI / Pasaporte</label>
-                <input type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white transition-colors" placeholder="NÂ° Documento" />
+                <input name="identificacion" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="N° Documento" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Nombres</label>
-                <input type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Nombres del donante" />
+                <input name="nombres" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Nombres" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Apellidos</label>
-                <input type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Apellidos" />
+                <input name="apellidos" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Apellidos" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Sexo</label>
+                <select name="sexo" onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white">
+                  <option>Masculino</option>
+                  <option>Femenino</option>
+                </select>
               </div>
             </div>
 
             <div className="grid grid-cols-4 gap-6 border-t border-slate-100 pt-6">
-              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">2. TipificaciÃ³n SanguÃ­nea Global (ISBT 128)</h4></div>
-              
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">2. Triaje y Examen Físico</h4></div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-1"><Scale className="w-4 h-4 text-slate-400" /> Peso (kg)</label>
+                <input name="peso" onChange={handleChange} type="number" step="0.1" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. 70.5" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700">Talla (cm)</label>
+                <input name="talla" onChange={handleChange} type="number" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. 175" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-1"><Activity className="w-4 h-4 text-red-400" /> Presión Arterial</label>
+                <input name="presionArterial" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. 120/80" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-1"><Droplet className="w-4 h-4 text-red-500" /> Hemoglobina (g/dL)</label>
+                <input name="hemoglobina" onChange={handleChange} type="number" step="0.1" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Ej. 14.2" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-6 border-t border-slate-100 pt-6">
+              <div className="col-span-4"><h4 className="text-sm font-bold text-slate-400 uppercase tracking-wider">3. Tipificación ISBT 128</h4></div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Sistema ABO</label>
-                <select className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
+                <select name="grupoSanguineo" onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
                   <option>O</option><option>A</option><option>B</option><option>AB</option>
-                  <option>Fenotipo Bombay (Oh)</option>
-                  <option>Para-Bombay</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Factor Rh (AntÃ­geno D)</label>
-                <select className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
-                  <option>POSITIVO (D+)</option><option>NEGATIVO (D-)</option>
-                  <option>D DÃ©bil (Weak D)</option>
-                  <option>D Parcial (Partial D)</option>
-                  <option>Rh Nulo (Sangre Dorada)</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Sistema Kell</label>
-                <select className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-700">
-                  <option>K- k+ (ComÃºn)</option><option>K+ k-</option><option>K+ k+</option><option>K0 (Kell null)</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Sistema Duffy</label>
-                <select className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-700">
-                  <option>Fy(a+b-)</option><option>Fy(a-b+)</option><option>Fy(a+b+)</option><option>Fy(a-b-)</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Sistema Kidd</label>
-                <select className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-700">
-                  <option>Jk(a+b-)</option><option>Jk(a-b+)</option><option>Jk(a+b+)</option><option>Jk(a-b-) nulo</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">MNSs</label>
-                <select className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-700">
-                  <option>M+ N- S+ s-</option><option>Otras variantes...</option>
+                <label className="text-sm font-semibold text-slate-700">Factor Rh</label>
+                <select name="factorRh" onChange={handleChange} className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-bold text-slate-800">
+                  <option>POSITIVO</option><option>NEGATIVO</option>
                 </select>
               </div>
               <div className="space-y-2 col-span-2">
-                <label className="text-sm font-semibold text-slate-700">Otros Anticuerpos Irregulares (Diego, Lutheran, Lewis)</label>
-                <input type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Especificar si existe..." />
+                <label className="text-sm font-semibold text-slate-700">Observaciones del Médico</label>
+                <input name="observacionesMedicas" onChange={handleChange} type="text" className="w-full border border-slate-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white" placeholder="Apto, venas finas..." />
               </div>
             </div>
             
             <div className="pt-6 border-t border-slate-100 flex justify-end">
-              <button type="button" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95">
-                Generar ISBT-128 e Imprimir Pulsera
+              <button 
+                type="button" 
+                onClick={handleGuardar}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95">
+                Guardar Donante e Iniciar Extracción
               </button>
             </div>
           </form>
@@ -110,33 +166,26 @@ export default function DonantesPage() {
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm">
                 <th className="p-4 font-bold">Documento</th>
                 <th className="p-4 font-bold">Nombre Completo</th>
-                <th className="p-4 font-bold">Tipo Primario</th>
-                <th className="p-4 font-bold">Fenotipo Raro (Alertas)</th>
-                <th className="p-4 font-bold">Estatus ClÃ­nico</th>
+                <th className="p-4 font-bold">Clínica (Hb / PA)</th>
+                <th className="p-4 font-bold">Tipo Sanguíneo</th>
+                <th className="p-4 font-bold">Registro</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
-              <tr className="hover:bg-blue-50/50 transition-colors cursor-pointer">
-                <td className="p-4 font-mono text-sm font-medium">74581290</td>
-                <td className="p-4 font-medium">Carlos Mendoza</td>
-                <td className="p-4"><span className="bg-red-100 text-red-800 px-3 py-1.5 rounded-lg font-black text-sm shadow-sm border border-red-200">O POSITIVO</span></td>
-                <td className="p-4 text-sm text-slate-400">Ninguno detectado</td>
-                <td className="p-4"><span className="text-emerald-600 font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Apto</span></td>
-              </tr>
-              <tr className="hover:bg-blue-50/50 transition-colors cursor-pointer bg-amber-50/30">
-                <td className="p-4 font-mono text-sm font-medium">45829104</td>
-                <td className="p-4 font-medium">MarÃ­a FernÃ¡ndez</td>
-                <td className="p-4"><span className="bg-blue-100 text-blue-800 px-3 py-1.5 rounded-lg font-black text-sm shadow-sm border border-blue-200">A NEGATIVO</span></td>
-                <td className="p-4 text-sm"><span className="bg-amber-100 text-amber-800 px-2 py-1 rounded font-bold">Kidd Null Jk(a-b-)</span></td>
-                <td className="p-4"><span className="text-blue-600 font-bold bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Donante Exclusiva</span></td>
-              </tr>
-              <tr className="hover:bg-blue-50/50 transition-colors cursor-pointer bg-purple-50/30">
-                <td className="p-4 font-mono text-sm font-medium">99120344</td>
-                <td className="p-4 font-medium">Thomas Creed</td>
-                <td className="p-4"><span className="bg-purple-100 text-purple-800 px-3 py-1.5 rounded-lg font-black text-sm shadow-sm border border-purple-200">Rh NULO</span></td>
-                <td className="p-4 text-sm"><span className="bg-purple-600 text-white px-2 py-1 rounded font-bold animate-pulse">SANGRE DORADA</span></td>
-                <td className="p-4"><span className="text-emerald-600 font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Apto</span></td>
-              </tr>
+              {donantes.length === 0 ? (
+                <tr><td colSpan={5} className="p-8 text-center text-slate-500">No hay donantes registrados.</td></tr>
+              ) : donantes.map((d: any) => (
+                <tr key={d.id} className="hover:bg-blue-50/50 transition-colors cursor-pointer">
+                  <td className="p-4 font-mono text-sm font-medium">{d.identificacion || 'N/A'}</td>
+                  <td className="p-4 font-medium">{d.nombres} {d.apellidos}<br/><span className="text-xs text-slate-500">{d.sexo} | {d.peso ? `${d.peso}kg` : ''}</span></td>
+                  <td className="p-4 text-sm font-medium text-slate-600">
+                    Hb: <span className={d.hemoglobina < 12.5 ? "text-red-600" : "text-emerald-600"}>{d.hemoglobina || '-'}</span> <br/>
+                    PA: {d.presionArterial || '-'}
+                  </td>
+                  <td className="p-4"><span className="bg-red-100 text-red-800 px-3 py-1.5 rounded-lg font-black text-sm shadow-sm border border-red-200">{d.grupoSanguineo} {d.factorRh}</span></td>
+                  <td className="p-4 text-sm"><span className="text-emerald-600 font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Apto</span></td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

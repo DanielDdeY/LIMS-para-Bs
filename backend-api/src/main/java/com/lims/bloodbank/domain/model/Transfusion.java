@@ -17,8 +17,13 @@ public class Transfusion {
     @ManyToOne
     @JoinColumn(name = "hemocomponente_id")
     private Hemocomponente hemocomponente;
-    private LocalDateTime fechaHora;
+    private LocalDateTime fechaHoraInicio;
+    private LocalDateTime fechaHoraFin;
     private String signosVitalesPre;
     private String signosVitalesPost;
     private String medicoResponsable;
+    private String responsableAplicacion;
+    private String areaDestino;
+    private String estadoTransfusion;
+    private String observaciones;
 }

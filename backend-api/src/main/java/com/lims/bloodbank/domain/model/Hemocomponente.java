@@ -14,6 +14,9 @@ public class Hemocomponente {
     private String codigoIsbt;
     private String tipoComponente;
     private String estado;
+    private Double volumenMl;
+    private String origen;
+    private String ubicacionFisica;
     private LocalDate fechaExtraccion;
     private LocalDate fechaCaducidad;
     @ManyToOne
