@@ -36,6 +36,11 @@ public class Paciente {
     private Integer gestaciones; // Relevante para mujeres (aloinmunización)
     private String nivelUrgencia; // Rutina, Urgencia, Emergencia, Protocolo Masivo
 
+    // --- NUEVOS CAMPOS AVANZADOS (NIVEL III) ---
+    private String fenotipoExtendido; // Ej: K-, C+, c-, E-, e+
+    private Boolean requiereSangreIrradiada; // Obligatorio para neonatos o inmunosuprimidos
+    private Boolean historialReaccionesAdversas;
+
     public Long getId() {
         return id;
     }

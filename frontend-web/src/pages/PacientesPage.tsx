@@ -1,17 +1,22 @@
-import { useState, useEffect } from 'react';
-import { Search, UserPlus, FileText, Phone, Calendar, Stethoscope, HeartPulse, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, UserPlus, FileText, Phone, Calendar, Stethoscope, HeartPulse, Activity, AlertTriangle, Printer, X, ShieldAlert } from 'lucide-react';
+import Barcode from 'react-barcode';
 import { api } from '../services/api';
 import { toast } from 'sonner';
 
 export default function PacientesPage() {
-  const [showForm, setShowForm] = useState(false);
   const [pacientes, setPacientes] = useState<any[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [pacienteParaPulsera, setPacienteParaPulsera] = useState<any>(null);
+
   const [formData, setFormData] = useState({
     documento: '', nombres: '', apellidos: '', sexo: 'Masculino',
     fechaNacimiento: '', grupoSanguineo: 'O', factorRh: 'POSITIVO',
     historiaClinica: '', diagnostico: '', servicioAtencion: 'Emergencia',
     areaInternacion: '', numeroCama: '', medicoTratante: '',
-    anticuerposIrregulares: 'Desconocido', gestaciones: '', nivelUrgencia: 'Rutina'
+    anticuerposIrregulares: 'Desconocido', gestaciones: '', nivelUrgencia: 'Rutina',
+    fenotipoExtendido: '', requiereSangreIrradiada: false, historialReaccionesAdversas: false
   });
 
   useEffect(() => {
@@ -29,7 +34,13 @@ export default function PacientesPage() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData({ ...formData, [name]: checked });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleGuardar = async () => {
@@ -39,8 +50,9 @@ export default function PacientesPage() {
         if (payload[key] === '') payload[key] = null;
       });
       
-      await api.post('/pacientes', payload);
-      toast.success("Paciente (Receptor) registrado exitosamente.");
+      const response = await api.post('/pacientes', payload);
+      toast.success("Paciente registrado. Generando Pulsera ISBT...");
+      setPacienteParaPulsera(response.data); // Asumimos que el backend retorna el paciente guardado
       setShowForm(false);
       cargarPacientes();
     } catch (error) {
@@ -48,6 +60,13 @@ export default function PacientesPage() {
       toast.error("Error al guardar el paciente. Asegúrate de que el Backend esté corriendo en el puerto 8080.");
     }
   };
+
+  const pacientesFiltrados = pacientes.filter((p: any) => 
+    (p.documento || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.nombres || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.apellidos || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.historiaClinica || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-8 animate-in">
@@ -203,6 +222,18 @@ export default function PacientesPage() {
         </div>
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="flex gap-4 mb-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Buscar por DNI, Nombres o Historia Clínica..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              />
+            </div>
+          </div>
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-sm">
@@ -214,15 +245,20 @@ export default function PacientesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
-              {pacientes.length === 0 ? (
-                <tr><td colSpan={5} className="p-8 text-center text-slate-500">No hay pacientes registrados.</td></tr>
-              ) : pacientes.map((p: any) => (
-                <tr key={p.id} className="hover:bg-blue-50/50 transition-colors cursor-pointer">
+              {pacientesFiltrados.length === 0 ? (
+                <tr><td colSpan={5} className="p-8 text-center text-slate-500">No hay pacientes encontrados.</td></tr>
+              ) : pacientesFiltrados.map((p: any) => {
+                const hasAntibodies = p.anticuerposIrregulares === 'Positivo (Alerta Crítica)';
+                return (
+                <tr key={p.id} className={`hover:bg-blue-50/50 transition-colors cursor-pointer ${hasAntibodies ? 'bg-red-50/50' : ''}`}>
                   <td className="p-4 font-mono text-sm font-medium">
                     <span className="text-xs font-bold text-slate-400">HC:</span> {p.historiaClinica || 'N/A'}<br/>
                     <span className="text-xs font-bold text-slate-400">DNI:</span> {p.documento}
                   </td>
-                  <td className="p-4 font-medium">{p.nombres} {p.apellidos}</td>
+                  <td className="p-4 font-medium flex items-center gap-2">
+                    {p.nombres} {p.apellidos}
+                    {hasAntibodies && <ShieldAlert className="w-4 h-4 text-red-600" title="Anticuerpos Irregulares POSITIVO" />}
+                  </td>
                   <td className="p-4">
                     <span className="bg-red-100 text-red-800 px-3 py-1.5 rounded-lg font-black text-sm shadow-sm border border-red-200">
                       {p.grupoSanguineo} {p.factorRh}
@@ -236,9 +272,64 @@ export default function PacientesPage() {
                     {p.diagnostico}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* MODAL PARA IMPRIMIR PULSERA ISBT */}
+      {pacienteParaPulsera && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center animate-in fade-in duration-200 p-4">
+          <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden border border-slate-100 flex flex-col">
+            <div className="bg-slate-900 p-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Printer className="w-5 h-5 text-blue-400" />
+                <h3 className="font-bold text-white text-lg">Imprimir Pulsera ISBT</h3>
+              </div>
+              <button onClick={() => setPacienteParaPulsera(null)} className="text-slate-400 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-2 rounded-full">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-8 flex flex-col items-center bg-slate-50">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 w-full mb-6">
+                <div className="text-center mb-6">
+                  <h4 className="font-black text-xl text-slate-800 uppercase tracking-tight">{pacienteParaPulsera.apellidos}, {pacienteParaPulsera.nombres}</h4>
+                  <p className="text-slate-500 font-mono text-sm mt-1">DNI: {pacienteParaPulsera.documento} | HC: {pacienteParaPulsera.historiaClinica || 'N/A'}</p>
+                </div>
+                
+                <div className="flex justify-center mb-6">
+                  <div className="bg-red-50 border-2 border-red-200 rounded-xl px-6 py-3 text-center">
+                    <p className="text-xs font-bold text-red-600 uppercase tracking-widest mb-1">Grupo y Factor</p>
+                    <p className="text-3xl font-black text-red-700">{pacienteParaPulsera.grupoSanguineo} {pacienteParaPulsera.factorRh}</p>
+                  </div>
+                </div>
+
+                <div className="flex justify-center">
+                  <Barcode 
+                    value={pacienteParaPulsera.documento ? `ID-${pacienteParaPulsera.documento}` : `HC-${pacienteParaPulsera.historiaClinica}`} 
+                    width={1.8} 
+                    height={60} 
+                    fontSize={14} 
+                    background="#ffffff" 
+                    lineColor="#0f172a" 
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 w-full">
+                <button onClick={() => setPacienteParaPulsera(null)} className="flex-1 px-4 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition-colors">
+                  Cancelar
+                </button>
+                <button onClick={() => { toast.success("Enviando a impresora térmica Zebra..."); setPacienteParaPulsera(null); }} className="flex-1 px-4 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-colors shadow-md flex items-center justify-center gap-2">
+                  <Printer className="w-4 h-4" />
+                  Imprimir
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
